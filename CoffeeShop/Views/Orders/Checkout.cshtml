@@ -1,0 +1,106 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4>Checkout</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Checkout" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FirstName" class="control-label">First Name</label>
+                                    <input asp-for="FirstName" class="form-control" required />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="LastName" class="control-label">Last Name</label>
+                                    <input asp-for="LastName" class="form-control" required />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Email" class="control-label">Email</label>
+                            <input asp-for="Email" class="form-control" readonly />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Phone" class="control-label">Phone</label>
+                            <input asp-for="Phone" class="form-control" required />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Address" class="control-label">Delivery Address</label>
+                            <textarea asp-for="Address" class="form-control" rows="3" required></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary">Place Order</button>
+                            <a asp-controller="ShoppingCart" asp-action="Index" class="btn btn-secondary">Back to Cart</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4>Order Summary</h4>
+                </div>
+                <div class="card-body">
+                    @{
+                        var shoppingCart = ViewContext.HttpContext.RequestServices.GetRequiredService<CoffeeShop.Models.Interfaces.IShoppingCartRepository>();
+                        var items = shoppingCart.GetShoppingCartItems();
+                        var total = shoppingCart.GetShoppingCartTotal();
+                    }
+
+                    @if (items.Count > 0)
+                    {
+                        <ul class="list-group mb-3">
+                            @foreach (var item in items)
+                            {
+                                <li class="list-group-item d-flex justify-content-between lh-sm">
+                                    <div>
+                                        <h6 class="my-0">@item.Product.Name</h6>
+                                        <small class="text-muted">Quantity: @item.Qty</small>
+                                    </div>
+                                    <span class="text-muted">@((item.Product.Price * item.Qty).ToString("c"))</span>
+                                </li>
+                            }
+                            <li class="list-group-item d-flex justify-content-between">
+                                <strong>Total</strong>
+                                <strong>@total.ToString("c")</strong>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            Your cart is empty. Please add some products before checkout.
+                        </div>
+                        <a asp-controller="Products" asp-action="Shop" class="btn btn-primary">Continue Shopping</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

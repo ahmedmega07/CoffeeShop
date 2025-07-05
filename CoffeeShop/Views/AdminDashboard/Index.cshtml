@@ -1,0 +1,74 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5 pt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Admin Dashboard</h2>
+            <p class="text-muted">Welcome to the administration panel</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4 mb-4">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body py-4">
+                    <h3>@ViewBag.OrderCount</h3>
+                    <h6>Total Orders</h6>
+                </div>
+                <div class="card-footer d-flex">
+                    <a href="@Url.Action("Orders", "AdminDashboard")" class="text-white text-decoration-none">
+                        View Details
+                        <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body py-4">
+                    <h3>@ViewBag.TotalRevenue.ToString("c")</h3>
+                    <h6>Total Revenue</h6>
+                </div>
+                <div class="card-footer d-flex">
+                    <a href="@Url.Action("Orders", "AdminDashboard")" class="text-white text-decoration-none">
+                        View Details
+                        <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body py-4">
+                    <h3>Management</h3>
+                    <h6>Products & Users</h6>
+                </div>
+                <div class="card-footer d-flex">
+                    <a href="@Url.Action("Manage", "Products")" class="text-white text-decoration-none">
+                        Manage Products
+                        <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Orders</h5>
+                </div>
+                <div class="card-body">
+                    <a href="@Url.Action("Orders", "AdminDashboard")" class="btn btn-primary">
+                        View All Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

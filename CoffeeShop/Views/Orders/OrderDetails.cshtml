@@ -1,0 +1,83 @@
+@model Order
+
+<div class="container mt-5 pt-4">
+    <div class="mb-4">
+        <a asp-action="MyOrders" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to My Orders
+        </a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="m-0">Order #@Model.Id</h3>
+                <span>@Model.OrderPlaced.ToString("MMM dd, yyyy HH:mm")</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Shipping Details</h5>
+                    <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                    <p><strong>Phone:</strong> @Model.Phone</p>
+                    <p><strong>Address:</strong> @Model.Address</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Order Summary</h5>
+                    <p><strong>Order Date:</strong> @Model.OrderPlaced.ToString("MMM dd, yyyy")</p>
+                    <p><strong>Order Total:</strong> @Model.OrderTotal.ToString("c")</p>
+                    <p><strong>Status:</strong> <span class="badge bg-success">Completed</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>Order Items</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th class="text-end">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.OrderDetails != null)
+                        {
+                            foreach (var item in Model.OrderDetails)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (item.Product?.ImageUrl != null)
+                                            {
+                                                <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="img-thumbnail me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                            }
+                                            <span>@item.Product?.Name</span>
+                                        </div>
+                                    </td>
+                                    <td>@item.Price.ToString("c")</td>
+                                    <td>@item.Quantity</td>
+                                    <td class="text-end">@((item.Price * item.Quantity).ToString("c"))</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                            <td class="text-end"><strong>@Model.OrderTotal.ToString("c")</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

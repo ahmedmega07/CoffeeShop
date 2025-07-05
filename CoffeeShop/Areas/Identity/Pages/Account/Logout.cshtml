@@ -1,0 +1,46 @@
+﻿@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Log out";
+}
+
+<div class="container mt-5 pt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h3">@ViewData["Title"]</h1>
+                </div>
+                <div class="card-body">
+                    @{
+                        if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <p>Click the button below to log out of the application.</p>
+                            <form class="form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" method="post">
+                                <button type="submit" class="btn btn-primary">Logout</button>
+                                <a class="btn btn-secondary" href="@Url.Content("~/")">Cancel</a>
+                            </form>
+                        }
+                        else
+                        {
+                            <p>You have successfully logged out of the application.</p>
+                            <a class="btn btn-primary" href="@Url.Content("~/")">Return to Home</a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // If already logged out, redirect to home page after a delay
+    @if (!(User.Identity?.IsAuthenticated ?? false))
+    {
+        <text>
+        setTimeout(function() {
+            window.location.href = '@Url.Content("~/")';
+        }, 2000);
+        </text>
+    }
+</script>
