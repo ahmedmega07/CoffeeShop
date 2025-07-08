@@ -150,5 +150,156 @@ namespace CoffeeShop.Models.Services
                 return new List<Order>();
             }
         }
+
+        public void UpdateOrder(Order order)
+        {
+            try
+            {
+                var strategy = dbContext.Database.CreateExecutionStrategy();
+                
+                strategy.Execute(() =>
+                {
+                    using (var transaction = dbContext.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var existingOrder = dbContext.Orders
+                                .Include(o => o.OrderDetails)
+                                .FirstOrDefault(o => o.Id == order.Id);
+
+                            if (existingOrder == null)
+                            {
+                                throw new InvalidOperationException($"Order with ID {order.Id} not found");
+                            }
+
+                            // Update order properties
+                            existingOrder.FirstName = order.FirstName;
+                            existingOrder.LastName = order.LastName;
+                            existingOrder.Email = order.Email;
+                            existingOrder.Phone = order.Phone;
+                            existingOrder.Address = order.Address;
+                            existingOrder.OrderTotal = order.OrderTotal;
+
+                            dbContext.SaveChanges();
+                            transaction.Commit();
+                            
+                            logger.LogInformation($"Order {order.Id} updated successfully");
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            logger.LogError(ex, $"Error updating order {order.Id}");
+                            throw;
+                        }
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error in UpdateOrder method for order {order.Id}");
+                throw;
+            }
+        }
+
+        public void DeleteOrder(int orderId)
+        {
+            try
+            {
+                var strategy = dbContext.Database.CreateExecutionStrategy();
+                
+                strategy.Execute(() =>
+                {
+                    using (var transaction = dbContext.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var order = dbContext.Orders
+                                .Include(o => o.OrderDetails)
+                                .FirstOrDefault(o => o.Id == orderId);
+
+                            if (order == null)
+                            {
+                                throw new InvalidOperationException($"Order with ID {orderId} not found");
+                            }
+
+                            // Remove order details first
+                            if (order.OrderDetails != null && order.OrderDetails.Any())
+                            {
+                                dbContext.OrderDetails.RemoveRange(order.OrderDetails);
+                            }
+
+                            // Remove the order
+                            dbContext.Orders.Remove(order);
+                            dbContext.SaveChanges();
+                            
+                            transaction.Commit();
+                            logger.LogInformation($"Order {orderId} deleted successfully");
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            logger.LogError(ex, $"Error deleting order {orderId}");
+                            throw;
+                        }
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error in DeleteOrder method for order {orderId}");
+                throw;
+            }
+        }
+
+        public Order CreateNewOrder()
+        {
+            return new Order
+            {
+                OrderPlaced = DateTime.Now,
+                OrderTotal = 0
+            };
+        }
+
+        public void CreateAdminOrder(Order order)
+        {
+            try
+            {
+                var strategy = dbContext.Database.CreateExecutionStrategy();
+                
+                strategy.Execute(() =>
+                {
+                    using (var transaction = dbContext.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Set order properties for admin-created order
+                            order.OrderPlaced = DateTime.Now;
+                            
+                            logger.LogInformation($"Creating admin order for: {order.Email}, Total: {order.OrderTotal}");
+                            
+                            // Save order
+                            dbContext.Orders.Add(order);
+                            dbContext.SaveChanges();
+                            
+                            // Commit the transaction
+                            transaction.Commit();
+                            logger.LogInformation($"Admin order {order.Id} created successfully");
+                        }
+                        catch (Exception ex)
+                        {
+                            // Roll back if there's an error
+                            transaction.Rollback();
+                            logger.LogError(ex, "Error saving admin order during transaction");
+                            throw;
+                        }
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error in CreateAdminOrder method");
+                throw;
+            }
+        }
     }
 }

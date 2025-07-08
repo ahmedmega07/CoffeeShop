@@ -1,0 +1,132 @@
+@model Order
+@{
+    ViewData["Title"] = "Edit Order";
+}
+
+<div class="container mt-5 pt-4">
+    <div class="mb-4">
+        <a asp-action="Orders" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-warning text-dark">
+            <h3 class="m-0">Edit Order #@Model.Id</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="EditOrder" method="post">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.OrderPlaced)
+                @Html.HiddenFor(m => m.UserId)
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Customer Information</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="FirstName" class="form-label"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" type="email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5>Order Details</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label"></label>
+                            <textarea asp-for="Address" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="OrderTotal" class="form-label"></label>
+                            <input asp-for="OrderTotal" class="form-control" type="number" step="0.01" min="0" />
+                            <span asp-validation-for="OrderTotal" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Order Date</label>
+                            <input type="text" class="form-control" value="@Model.OrderPlaced.ToString("MMM dd, yyyy HH:mm")" readonly />
+                            <small class="form-text text-muted">Order date cannot be modified</small>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.UserId))
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">User ID</label>
+                                <input type="text" class="form-control" value="@Model.UserId" readonly />
+                                <small class="form-text text-muted">User ID cannot be modified</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                {
+                    <hr />
+                    <h5>Order Items</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OrderDetails)
+                                {
+                                    <tr>
+                                        <td>@item.Product?.Name</td>
+                                        <td>@item.Price.ToString("c")</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@((item.Price * item.Quantity).ToString("c"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+                <hr />
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save"></i> Update Order
+                    </button>
+                    <a asp-action="OrderDetails" asp-route-id="@Model.Id" class="btn btn-info">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                    <a asp-action="Orders" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

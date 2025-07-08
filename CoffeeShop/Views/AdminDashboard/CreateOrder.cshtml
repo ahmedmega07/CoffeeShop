@@ -1,0 +1,89 @@
+@model Order
+@{
+    ViewData["Title"] = "Create New Order";
+}
+
+<div class="container mt-5 pt-4">
+    <div class="mb-4">
+        <a asp-action="Orders" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h3 class="m-0">Create New Order</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="CreateOrder" method="post">
+                @Html.AntiForgeryToken()
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Customer Information</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="FirstName" class="form-label"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" type="email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5>Order Details</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label"></label>
+                            <textarea asp-for="Address" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="OrderTotal" class="form-label"></label>
+                            <input asp-for="OrderTotal" class="form-control" type="number" step="0.01" min="0" />
+                            <span asp-validation-for="OrderTotal" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="UserId" class="form-label">User ID (Optional)</label>
+                            <input asp-for="UserId" class="form-control" />
+                            <span asp-validation-for="UserId" class="text-danger"></span>
+                            <small class="form-text text-muted">Leave empty for guest orders</small>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Create Order
+                    </button>
+                    <a asp-action="Orders" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

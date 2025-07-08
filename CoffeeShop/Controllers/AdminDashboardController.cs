@@ -55,5 +55,110 @@ namespace CoffeeShop.Controllers
                 return View(new List<Order>());
             }
         }
+
+        public IActionResult OrderDetails(int id)
+        {
+            try
+            {
+                var order = _orderRepository.GetOrderById(id);
+                if (order == null)
+                {
+                    TempData["ErrorMessage"] = "Order not found.";
+                    return RedirectToAction("Orders");
+                }
+                return View(order);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error loading order details for ID: {id}");
+                TempData["ErrorMessage"] = "Error loading order details.";
+                return RedirectToAction("Orders");
+            }
+        }
+
+        public IActionResult CreateOrder()
+        {
+            var order = _orderRepository.CreateNewOrder();
+            return View(order);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateOrder(Order order)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _orderRepository.CreateAdminOrder(order);
+                    TempData["SuccessMessage"] = "Order created successfully.";
+                    return RedirectToAction("Orders");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating order");
+                ModelState.AddModelError("", "Error creating order. Please try again.");
+            }
+            return View(order);
+        }
+
+        public IActionResult EditOrder(int id)
+        {
+            try
+            {
+                var order = _orderRepository.GetOrderById(id);
+                if (order == null)
+                {
+                    TempData["ErrorMessage"] = "Order not found.";
+                    return RedirectToAction("Orders");
+                }
+                return View(order);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error loading order for editing: {id}");
+                TempData["ErrorMessage"] = "Error loading order for editing.";
+                return RedirectToAction("Orders");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditOrder(Order order)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _orderRepository.UpdateOrder(order);
+                    TempData["SuccessMessage"] = "Order updated successfully.";
+                    return RedirectToAction("Orders");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error updating order: {order.Id}");
+                ModelState.AddModelError("", "Error updating order. Please try again.");
+            }
+            return View(order);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteOrder(int id)
+        {
+            try
+            {
+                _orderRepository.DeleteOrder(id);
+                TempData["SuccessMessage"] = "Order deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error deleting order: {id}");
+                TempData["ErrorMessage"] = "Error deleting order. Please try again.";
+            }
+            return RedirectToAction("Orders");
+        }
     }
 }
