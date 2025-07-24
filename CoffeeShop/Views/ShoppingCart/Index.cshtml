@@ -2,103 +2,119 @@
 
 @if (Model.Count() > 0)
 {
-<section class="h-100 h-custom">
-    <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-12">
-                <div class="card card-registration card-registration-2" style="border-radius: 15px; background-color:#fafafa">
-                    <div class="card-body p-0">
-                        <div class="row g-0">
-                            <div class="col-lg-7">
-                                <div class="p-5">
-                                    <div class="d-flex justify-content-between align-items-center mb-5">
-                                        <h2 class="fw-bold mb-0 text-black">Shopping Cart</h2>
-                                        <h6 class="mb-0 text-muted cart-item-count">@Model.Count() items</h6>
-                                    </div>
-                                    <hr class="my-4">
+    <section class="h-100 h-custom" style="background-color: #f8f9fa; min-height: 100vh;">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12">
+                    <div class="card card-registration card-registration-2 shadow-lg" style="border-radius: 20px; background: linear-gradient(145deg, #ffffff, #f0f0f0); border: none;">
+                        <div class="card-body p-0">
+                            <div class="row g-0">
+                                <div class="col-lg-7">
+                                    <div class="p-5">
+                                        <div class="d-flex justify-content-between align-items-center mb-5">
+                                            <h2 class="fw-bold mb-0 text-dark" style="font-family: 'Roboto', sans-serif; letter-spacing: 0.5px;">Shopping Cart</h2>
+                                            <h6 class="mb-0 text-muted cart-item-count" style="font-size: 1.1rem; opacity: 0.8;">@Model.Count() items</h6>
+                                        </div>
+                                        <hr class="my-4" style="border-color: #dee2e6;">
 
-                                    <div id="cart-items">
-                                        @foreach (var item in Model)
-                                        {
-                                            <div class="row mb-4 d-flex justify-content-between align-items-center" data-product-id="@item.Product?.Id">
-                                                <div class="col-md-2 col-lg-2 col-xl-2">
-                                                    <img src="@item.Product?.ImageUrl"
-                                                         class="img-fluid rounded-3">
-                                                </div>
-                                                <div class="col-md-3 col-lg-3 col-xl-3">
-                                                    <h6 class="text-black mb-0">@item.Product?.Name</h6>
-                                                </div>
+                                        <div id="cart-items">
+                                            @foreach (var item in Model)
+                                            {
+                                                <div class="row mb-4 d-flex justify-content-between align-items-center cart-item-row" data-product-id="@item.Product?.Id" style="transition: all 0.3s ease;">
+                                                    <div class="col-md-2 col-lg-2 col-xl-2">
+                                                        <img src="@item.Product?.ImageUrl"
+                                                             class="img-fluid rounded-3 shadow-sm" style="object-fit: cover; height: 80px; width: 80px;" alt="@item.Product?.Name">
+                                                    </div>
+                                                    <div class="col-md-3 col-lg-3 col-xl-3">
+                                                        <h6 class="text-dark mb-0" style="font-weight: 500; font-size: 1.1rem;">@item.Product?.Name</h6>
+                                                    </div>
 
-                                                <div class="col-md-3 col-lg-2 col-xl-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <button onclick="decreaseQuantityAjax(@item.Product?.Id, this.nextElementSibling)" 
-                                                                class="btn btn-sm btn-outline-secondary me-2" 
-                                                                style="border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;"
-                                                                type="button">
-                                                            <i class="fas fa-minus"></i>
-                                                        </button>
-                                                        <span class="mx-2 quantity-display">@item.Qty</span>
-                                                        <button onclick="increaseQuantityAjax(@item.Product?.Id, this.previousElementSibling)" 
-                                                                class="btn btn-sm btn-success ms-2" 
-                                                                style="border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;"
-                                                                type="button">
-                                                            <i class="fas fa-plus"></i>
+                                                    <div class="col-md-3 col-lg-2 col-xl-2">
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            <button onclick="decreaseQuantityAjax(@item.Product?.Id, this.nextElementSibling)"
+                                                                    class="btn btn-sm btn-outline-secondary me-2"
+                                                                    style="border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; border: 2px solid #6c757d;"
+                                                                    type="button"
+                                                                    onmouseover="this.style.backgroundColor='#e9ecef'"
+                                                                    onmouseout="this.style.backgroundColor='transparent'">
+                                                                <i class="fas fa-minus" style="font-size: 0.9rem;"></i>
+                                                            </button>
+                                                            <span class="mx-2 quantity-display" style="font-size: 1.1rem; font-weight: 500; min-width: 30px; text-align: center;">@item.Qty</span>
+                                                            <button onclick="increaseQuantityAjax(@item.Product?.Id, this.previousElementSibling)"
+                                                                    class="btn btn-sm btn-success ms-2"
+                                                                    style="border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; background-color: #28a745; border: none;"
+                                                                    type="button"
+                                                                    onmouseover="this.style.backgroundColor='#218838'"
+                                                                    onmouseout="this.style.backgroundColor='#28a745'">
+                                                                <i class="fas fa-plus" style="font-size: 0.9rem;"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3 col-lg-2 col-xl-2">
+                                                        <h6 class="mb-0 item-total" style="font-weight: 600; color: #212529; font-size: 1.1rem;">@((item.Qty * (item.Product?.Price ?? 0)).ToString("c"))</h6>
+                                                    </div>
+
+                                                    <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                                        <button onclick="removeFromCartAjax(@item.Product?.Id, this)"
+                                                                class="btn btn-link text-decoration-none p-0 border-0 bg-transparent"
+                                                                type="button"
+                                                                title="Remove item"
+                                                                style="transition: all 0.2s ease;">
+                                                            <h3 style="color: #dc3545; opacity: 0.7;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">🗑</h3>
                                                         </button>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-3 col-lg-2 col-xl-2">
-                                                    <h6 class="mb-0 item-total">@((item.Qty * (item.Product?.Price ?? 0)).ToString("c"))</h6>
-                                                </div>
+                                                <hr class="my-4" style="border-color: #dee2e6;">
+                                            }
+                                        </div>
 
-                                                <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                                    <button onclick="removeFromCartAjax(@item.Product?.Id, this)" 
-                                                            class="btn btn-link text-decoration-none p-0 border-0 bg-transparent"
-                                                            type="button"
-                                                            title="Remove item">
-                                                        <h3>&#128465;</h3>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <hr class="my-4">
-                                        }
-                                    </div>
-
-                                    <div class="pt-5">
-                                        <h6 class="mb-0">
-                                            <a asp-controller="Products" asp-action="Shop" class="text-body">
-                                                <i class="fas fa-long-arrow-alt-left me-2"></i>Back to shop
-                                            </a>
-                                        </h6>
+                                        <div class="pt-5">
+                                            <h6 class="mb-0">
+                                                <a asp-controller="Products" asp-action="Shop" class="text-body" style="text-decoration: none; color: #007bff; transition: color 0.2s ease;"
+                                                   onmouseover="this.style.color='#0056b3'" onmouseout="this.style.color='#007bff'">
+                                                    <i class="fas fa-long-arrow-alt-left me-2"></i>Back to shop
+                                                </a>
+                                            </h6>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-lg-5 bg-grey">
-                                <div class="p-5">
-                                    <h4 class="fw-bold mb-5 mt-2 pt-1">Summary</h4>
-                                    <hr class="my-4">
-                                    <div class="d-flex justify-content-between mb-5">
-                                        <h5 class="text-uppercase">Total price</h5>
-                                        <h5 class="cart-total">@ViewBag.CartTotal.ToString("c")</h5>
-                                    </div>
-
-                                    @if (User.Identity.IsAuthenticated)
-                                    {
-                                        <a asp-controller="Orders" asp-action="Checkout" class="btn btn-primary w-100 text-center">
-                                            Proceed to Checkout
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <div class="alert alert-info mb-3">
-                                            Please sign in to proceed with your order
+                                <div class="col-lg-5 bg-grey" style="background: linear-gradient(145deg, #e9ecef, #dee2e6); border-radius: 0 20px 20px 0;">
+                                    <div class="p-5">
+                                        <h4 class="fw-bold mb-5 mt-2 pt-1" style="font-family: 'Roboto', sans-serif; color: #212529;">Summary</h4>
+                                        <hr class="my-4" style="border-color: #ced4da;">
+                                        <div class="d-flex justify-content-between mb-5">
+                                            <h5 class="text-uppercase" style="font-weight: 500; color: #212529;">Total price</h5>
+                                            <h5 class="cart-total" style="font-weight: 600; color: #212529;">@ViewBag.CartTotal.ToString("c")</h5>
                                         </div>
-                                        <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Action("Checkout", "Orders")" class="btn btn-primary w-100 text-center">
-                                            Sign In to Checkout
-                                        </a>
-                                    }
+
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <a asp-controller="Orders" asp-action="Checkout"
+                                               class="btn btn-primary w-100 text-center"
+                                               style="border-radius: 10px; padding: 12px; font-size: 1.1rem; background-color: #007bff; border: none; transition: all 0.3s ease;"
+                                               onmouseover="this.style.backgroundColor='#0056b3'"
+                                               onmouseout="this.style.backgroundColor='#007bff'">
+                                                Proceed to Checkout
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <div class="alert alert-info mb-3" style="border-radius: 10px; background-color: #e7f1ff; color: #084298; border: none; padding: 15px;">
+                                                Please sign in to proceed with your order
+                                            </div>
+                                            <a asp-area="Identity" asp-page="/Account/Login"
+                                               asp-route-returnUrl="@Url.Action("Checkout", "Orders")"
+                                               class="btn btn-primary w-100 text-center"
+                                               style="border-radius: 10px; padding: 12px; font-size: 1.1rem; background-color: #007bff; border: none; transition: all 0.3s ease;"
+                                               onmouseover="this.style.backgroundColor='#0056b3'"
+                                               onmouseout="this.style.backgroundColor='#007bff'">
+                                                Sign In to Checkout
+                                            </a>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -106,23 +122,28 @@
                 </div>
             </div>
         </div>
-    </div>
     </section>
 }
 else
 {
-    <div class="container">
-        <br><br><br><br>
-        <div class="text-center">
-            <img src="https://www.svgrepo.com/show/17356/empty-cart.svg" class="img-fluid" style="width: 200px; height: 200px; margin-left: auto; margin-right: auto" alt="...">
-            <br>
-            <h1><strong>Your cart is empty</strong></h1>
-            <br>
-            <p>Before proceed to checkout you must add some products to your shopping cart. You will find a lot of interesting products on our "Shop" page.</p>
-            <a asp-controller="Products" asp-action="Shop" class="btn btn-primary w-20">
+    <div class="container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
+        <div class="text-center p-5" style="background: #ffffff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 600px;">
+            <img src="https://www.svgrepo.com/show/17356/empty-cart.svg"
+                 class="img-fluid mb-4"
+                 style="width: 200px; height: 200px; margin-left: auto; margin-right: auto; opacity: 0.9;"
+                 alt="Empty cart">
+            <h1 class="fw-bold mb-4" style="font-family: 'Roboto', sans-serif; color: #212529;"><strong>Your cart is empty</strong></h1>
+            <p class="text-muted mb-4" style="font-size: 1.1rem; line-height: 1.6;">
+                Before proceeding to checkout, please add some products to your shopping cart.
+                Discover a variety of exciting products on our "Shop" page.
+            </p>
+            <a asp-controller="Products" asp-action="Shop"
+               class="btn btn-primary"
+               style="border-radius: 10px; padding: 12px 30px; font-size: 1.1rem; background-color: #007bff; border: none; transition: all 0.3s ease;"
+               onmouseover="this.style.backgroundColor='#0056b3'"
+               onmouseout="this.style.backgroundColor='#007bff'">
                 Start Shopping
             </a>
         </div>
     </div>
 }
-
